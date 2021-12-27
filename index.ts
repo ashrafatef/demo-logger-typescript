@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+
 import { logger } from "./logger";
-
-
 logger.info("info test ya 3aaaaaaaam")
 logger.error("error test ya 3aaaaaaaam")
 logger.warn("warn test ya 3aaaaaaaam")

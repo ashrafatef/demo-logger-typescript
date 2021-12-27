@@ -1,10 +1,9 @@
 import winston from "winston";
-import { loggerConfig, loggerLevels } from "./config";
+import { loggerConfig } from "./config";
 
 class Logger {
-  private logger: any;
+  private logger: winston.Logger;
   constructor() {
-    winston.addColors(loggerLevels.colors);
     this.logger = winston.createLogger(loggerConfig);
   }
   info(message: string) {
@@ -23,5 +22,6 @@ class Logger {
     this.logger.http(message);
   }
 }
+
 
 export const logger = new Logger();

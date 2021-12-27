@@ -1,11 +1,11 @@
 import winston, { format, info } from "winston";
 
-export const loggerLevels = {
+ const loggerLevels = {
   levels: {
     error: 0,
     info: 1,
     warn: 2,
-    http:3,
+    http: 3,
     debug: 4
   },
   colors: {
@@ -17,8 +17,11 @@ export const loggerLevels = {
   },
 };
 
+winston.addColors(loggerLevels.colors);
+
+
 export const loggerConfig = {
-  level:'http',
+  level: process.env.NODE_ENV !== 'production' ? 'debug' : 'http',
   levels: loggerLevels.levels,
   transports: [
     new winston.transports.File({
