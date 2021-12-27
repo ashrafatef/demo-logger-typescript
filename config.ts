@@ -1,27 +1,24 @@
-import winston from "winston";
+import winston, { format, info } from "winston";
 
 export const loggerLevels = {
   levels: {
     error: 0,
-    warn: 1,
-    info: 2,
-    debug: 3,
+    info: 1,
+    warn: 2,
+    http:3,
+    debug: 4
   },
   colors: {
-    ERROR: "red",
-    WARN: "yellow",
-    INFO: "cyan",
-    DEBUG: "green",
+    error: "red",
+    warn: "yellow",
+    info: "cyan",
+    debug: "green",
+    http: "blue",
   },
 };
 
-const formateLogger = winston.format.printf((info) => {
-  return `[${info.level}] ${info.label}: [${[info.timestamp]}]: ${
-    info.message
-  }`;
-});
-
 export const loggerConfig = {
+  level:'http',
   levels: loggerLevels.levels,
   transports: [
     new winston.transports.File({
@@ -34,17 +31,15 @@ export const loggerConfig = {
       filename: "logs/error.log",
       format: winston.format.json(),
     }),
-    new winston.transports.Console({level:'info'}),
+    new winston.transports.Console(),
   ],
   format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.label({
-      label: `Notification Service`,
-    }),
-    winston.format.timestamp({
-      format: "MMM-DD-YYYY HH:mm:ss",
-    }),
-    winston.format.json(),
-    formateLogger
+    winston.format(info => ({ ...info, level: info.level.toUpperCase() }))(),
+    winston.format.label({ label: "Notification Service" }),
+    winston.format.colorize({ all: true }),
+    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    winston.format.printf(
+      ({ timestamp, level, message, label }) => `[${level}] [${[timestamp]}] [${label}] : ${message}`
+    )
   ),
 };
